@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="p-4">
       <Modal title="test" description="test" onClose={() => {}} isOpen>
-        <div>children</div>
+        children
       </Modal>
     </div>
   );
