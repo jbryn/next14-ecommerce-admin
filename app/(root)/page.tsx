@@ -1,11 +1,13 @@
-import { Button } from "@/components/ui/button";
+"use client";
+
+import { Modal } from "@/components/ui/modal";
 
 export default function Home() {
   return (
     <div className="p-4">
-      <Button size="lg" variant="default">
-        Click
-      </Button>
+      <Modal title="test" description="test" onClose={() => {}} isOpen>
+        <div>children</div>
+      </Modal>
     </div>
   );
 }
