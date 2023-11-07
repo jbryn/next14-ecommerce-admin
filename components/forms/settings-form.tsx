@@ -19,6 +19,9 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -26,6 +29,9 @@ interface SettingsFormProps {
 
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const router = useRouter();
 
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -40,15 +46,31 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     },
   });
 
-  const onSubmit = (values: SettingsFormValues) => {
-    console.log(values);
+  const onSubmit = async (values: SettingsFormValues) => {
+    try {
+      setLoading(true);
+      const response = await axios.patch(
+        `/api/stores/${initialData.id}`,
+        values
+      );
+      toast.success("Store updated successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Heading title="Settings" description="Manage store preferences" />
-        <Button variant="destructive" size="sm" onClick={() => {}}>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => setModalOpen(true)}
+        >
           Delete
           <Trash className="ml-2 h-4 w-4" />
         </Button>
@@ -56,7 +78,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
       <Separator />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -76,9 +98,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
               )}
             />
           </div>
-          <div className="pt-6 space-x-2 flex items-center justify-end">
-            <Button type="submit">Save</Button>
-          </div>
+          <Button
+            className="ml-auto"
+            type="submit"
+            onClick={() => setModalOpen(true)}
+            disabled={loading}
+          >
+            Save
+          </Button>
         </form>
       </Form>
     </>
