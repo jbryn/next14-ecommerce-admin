@@ -2,11 +2,10 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-interface StoreParams {
-  storeId: string;
-}
-
-export async function PATCH(req: Request, params: StoreParams) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { storeId: string } }
+) {
   try {
     const { userId } = auth();
     const body = await req.json();
@@ -42,7 +41,10 @@ export async function PATCH(req: Request, params: StoreParams) {
   }
 }
 
-export async function DELETE(_req: Request, params: StoreParams) {
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { storeId: string } }
+) {
   try {
     const { userId } = auth();
 

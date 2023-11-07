@@ -22,6 +22,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import AlertModal from "@/components/modals/alert-modal";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -49,10 +50,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
   const onSubmit = async (values: SettingsFormValues) => {
     try {
       setLoading(true);
-      const response = await axios.patch(
-        `/api/stores/${initialData.id}`,
-        values
-      );
+      await axios.patch(`/api/stores/${initialData.id}`, values);
       toast.success("Store updated successfully");
       router.refresh();
     } catch (error) {
@@ -62,8 +60,29 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(`/api/stores/${initialData.id}`);
+      toast.success("Store deleted successfully");
+      router.refresh();
+      router.push("/");
+    } catch (error) {
+      toast.error("Remove all products and categories first");
+    } finally {
+      setLoading(false);
+      setModalOpen(false);
+    }
+  };
+
   return (
     <>
+      <AlertModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+      />
       <div className="flex items-center justify-between">
         <Heading title="Settings" description="Manage store preferences" />
         <Button
@@ -98,12 +117,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
               )}
             />
           </div>
-          <Button
-            className="ml-auto"
-            type="submit"
-            onClick={() => setModalOpen(true)}
-            disabled={loading}
-          >
+          <Button className="ml-auto" type="submit" disabled={loading}>
             Save
           </Button>
         </form>
