@@ -23,6 +23,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import AlertModal from "@/components/modals/alert-modal";
+import ApiAlert from "../api-alert";
+import { useOrigin } from "@/hooks/use-origin";
 
 interface SettingsFormProps {
   initialData: Store;
@@ -33,6 +35,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const router = useRouter();
+  const origin = useOrigin();
 
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -118,10 +121,16 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
             />
           </div>
           <Button className="ml-auto" type="submit" disabled={loading}>
-            Save
+            Save changes
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert
+        title="NEXT_PUBLIC_API_URL"
+        description={`${origin}/api/${initialData.id}`}
+        variant="admin"
+      />
     </>
   );
 };
