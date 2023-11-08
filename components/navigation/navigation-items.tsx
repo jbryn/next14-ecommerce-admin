@@ -13,6 +13,11 @@ export default function NavigationItems({
 
   const routes = [
     {
+      href: `/${params.storeId}`,
+      label: "Overview",
+      active: pathname === `/${params.storeId}`,
+    },
+    {
       href: `/${params.storeId}/settings`,
       label: "Settings",
       active: pathname === `/${params.storeId}/settings`,
@@ -26,7 +31,7 @@ export default function NavigationItems({
           key={route.href}
           href={route.href}
           className={
-            (cn("text-sm font-medium transition-colors hover:text-primary"),
+            (cn("text-sm font-medium transition-color"),
             route.active
               ? "text-black dark:text-white"
               : "text-muted-foreground")
