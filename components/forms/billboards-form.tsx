@@ -25,6 +25,7 @@ import { useParams, useRouter } from "next/navigation";
 import AlertModal from "@/components/modals/alert-modal";
 import ApiAlert from "../api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "../ui/image-upload";
 
 interface BillboardFormProps {
   initialData: Billboard | null;
@@ -113,6 +114,24 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image URL</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    values={field.value ? [field.value] : []}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                    disabled={loading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -120,23 +139,6 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Label</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Billboard"
-                      disabled={loading}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Billboard"
