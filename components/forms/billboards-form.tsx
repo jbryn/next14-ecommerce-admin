@@ -23,7 +23,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import AlertModal from "@/components/modals/alert-modal";
-import ApiAlert from "../api-alert";
+import ApiAlert from "../shared/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "../ui/image-upload";
 
