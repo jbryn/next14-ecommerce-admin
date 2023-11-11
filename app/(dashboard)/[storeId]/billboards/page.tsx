@@ -1,4 +1,4 @@
-import BillboardsPageHeading from "@/components/billboards/billboards-page-heading";
+import PageHeading from "@/components/shared/page-heading";
 import { BillboardColumn, columns } from "@/components/billboards/columns";
 import { format } from "date-fns";
 import prismadb from "@/lib/prismadb";
@@ -26,7 +26,7 @@ const BillboardsPage: React.FC<{ params: { storeId: string } }> = async ({
 
   return (
     <div className="flex-col p-8 pt-6">
-      <BillboardsPageHeading data={formattedData} />
+      <PageHeading title="billboards" itemsCount={formattedData.length} />
 
       <div className="mx-auto py-10">
         <DataTable columns={columns} data={formattedData} searchKey="label" />

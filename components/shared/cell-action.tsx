@@ -11,18 +11,23 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-import { BillboardColumn } from "./columns";
+import { BillboardColumn } from "../billboards/columns";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import AlertModal from "../modals/alert-modal";
+import { CategoryColumn } from "../categories/columns";
 
 interface CellActionProps {
-  data: BillboardColumn;
+  data: BillboardColumn | CategoryColumn;
+  type: "billboards" | "categories";
 }
 
-const CellAction: React.FC<CellActionProps> = ({ data }: CellActionProps) => {
+const CellAction: React.FC<CellActionProps> = ({
+  data,
+  type,
+}: CellActionProps) => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const params = useParams();
@@ -36,11 +41,11 @@ const CellAction: React.FC<CellActionProps> = ({ data }: CellActionProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores/${params.storeId}/billboards/${data.id}`);
-      toast.success("Billboard deleted successfully");
+      await axios.delete(`/api/stores/${params.storeId}/${type}/${data.id}`);
+      toast.success("Success!");
       router.refresh();
     } catch (error) {
-      toast.error("Remove all categories using this billboard");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
       setModalOpen(false);
@@ -70,9 +75,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }: CellActionProps) => {
             Copy id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/${params.storeId}/billboards/${data.id}`)
-            }
+            onClick={() => router.push(`/${params.storeId}/${type}/${data.id}`)}
           >
             <Edit className="w-4 h-4 mr-2" />
             Edit
