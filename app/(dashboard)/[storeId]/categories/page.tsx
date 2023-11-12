@@ -16,11 +16,18 @@ const CategoriesPage: React.FC<{ params: { storeId: string } }> = async ({
     where: {
       storeId: params.storeId,
     },
+    include: {
+      billboard: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   const formattedData: CategoryColumn[] = categories.map((category) => ({
     id: category.id,
-    label: category.name,
+    name: category.name,
+    billboardLabel: category.billboard.label,
     createdAt: format(category.createdAt, "MM/dd/yyyy"),
   }));
 
@@ -29,7 +36,7 @@ const CategoriesPage: React.FC<{ params: { storeId: string } }> = async ({
       <PageHeading title="categories" itemsCount={formattedData.length} />
 
       <div className="mx-auto py-10">
-        <DataTable columns={columns} data={formattedData} searchKey="label" />
+        <DataTable columns={columns} data={formattedData} searchKey="name" />
       </div>
 
       <Heading title="API" description="API Calls for Categories" />
